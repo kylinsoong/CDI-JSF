@@ -1,0 +1,6 @@
+Test entry
+----------
+
+link:cdi-injection.asciidoc[CDI injection test entry]
+
+
