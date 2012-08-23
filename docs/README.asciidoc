@@ -3,6 +3,7 @@ Test entry
 
 link:cdi-injection.asciidoc[CDI injection test entry]
 
+link:helloworldjsf.asciidoc[JSF helloworld test entry]
 
 
 

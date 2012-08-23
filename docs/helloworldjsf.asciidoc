@@ -1,0 +1,19 @@
+What is it?
+-----------
+This example demonstrates adding ajax processing and updating to a standard JSF component. 
+
+
+In the example, we have a standard JSF inputText with a nested RichFaces ajax tag. This ajax tag triggers an ajax request on every "keyup" event from the input box. The value of the input box is sent to the server where the backing bean is updated, and the "output" panelGroup is re-rendered, without requiring a full-page refresh. 
+
+
+To see this example in action, begin typing in the input box, and watch as your text is echoed with html generated from the application server using an ajax call. 
+
+
+.As below diagram
+image::img/helloworldjsf.png[]
+
+. Input the string in `Name` text input panel, 'Hello' prefix will be added and outputed without refreshing
+
+. Input the string in `Input` text input panle, the inputede string will be reversedd and outputed without refreshing
+
+
