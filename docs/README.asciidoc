@@ -4,3 +4,10 @@ Test entry
 link:cdi-injection.asciidoc[CDI injection test entry]
 
 
+
+
+
+REFERENCE DOCS:
+--------------
+
+link:jsr-299.asciidoc[JSR-299]

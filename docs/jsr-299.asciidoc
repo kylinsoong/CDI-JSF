@@ -1,0 +1,36 @@
+1. Architecture
+---------------
+Contexts and Dependency Injection (CDI) defines a powerful set of complementary services that help improve the structure of application code.
+
+* A well-defined lifecycle for stateful objects bound to 'lifecycle contexts', where the set of contexts is extensible
+
+* A sophisticated, typesafe 'dependency injection' mechanism, including the ability to select dependencies at either development or deployment time, without verbose configuration
+
+* Support for Java EE modularity and the Java EE component architecture—the modular structure of a Java EE application is taken into account when resolving dependencies between Java EE components
+
+* Integration with the Unified Expression Language (EL), allowing any contextual object to be used directly within a JSF or JSP page
+
+* The ability to 'decorate' injected objects
+
+* The ability to associate interceptors to objects via typesafe 'interceptor' bindings
+
+* An 'event notification' model
+
+* A web 'conversation context' in addition to the three standard web contexts defined by the Java Servlets specification
+
+* An SPI allowing portable extensions to integrate cleanly with the container
+
+The services defined by this specification allow objects to be bound to lifecycle contexts, to be injected, to be associated with interceptors and decorators, and to interact in a loosely coupled fashion by firing and observing events. Various kinds of objects are injectable, including EJB 3 session beans, managed beans and Java EE resources. We refer to these objects in general terms as beans and to instances of beans that belong to contexts as 'contextual instances'. Contextual instances may be injected into other objects by the dependency injection service.
+
+
+To take advantage of these facilities, the developer provides additional bean-level metadata in the form of Java annotations and application-level metadata in the form of an XML descriptor.
+
+
+The use of these services significantly simplifies the task of creating Java EE applications by integrating the Java EE web tier with Java EE enterprise services. In particular, EJB components may be used as JSF managed beans, thus integrating the programming models of EJB and JSF.
+
+
+It's even possible to integrate with third-party frameworks. A portable extension may provide objects to be injected or obtain contextual instances using the dependency injection service. The framework may even raise and observe events using the event notification service.
+
+
+An application that takes advantage of these services may be designed to execute in either the Java EE environment or the Java SE environment. If the application uses Java EE services such as transaction management and persistence in the Java SE environment, the services are usually restricted to, at most, the subset defined for embedded usage by the EJB specification.
+
