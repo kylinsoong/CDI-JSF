@@ -14,6 +14,7 @@ import javax.inject.Named;
 
 import com.kylin.cdi.payment.events.PaymentEvent;
 import com.kylin.cdi.payment.events.PaymentTypeEnum;
+import com.kylin.cdi.payment.qualifiers.Cash;
 import com.kylin.cdi.payment.qualifiers.Credit;
 import com.kylin.cdi.payment.qualifiers.Debit;
 
@@ -27,7 +28,7 @@ public class PaymentBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	 private Logger log;
+	private Logger log;
 
 	//Events producers
 	@Inject
@@ -38,9 +39,13 @@ public class PaymentBean implements Serializable {
 	@Debit
 	Event<PaymentEvent> debitEventProducer;
 	
+	@Inject
+	@Cash
+	Event<PaymentEvent> cashEventProducer;
+	
 	private BigDecimal amount= new BigDecimal(10.0);
 			
-	private String paymentOption=PaymentTypeEnum.DEBIT.toString();
+	private String paymentOption = PaymentTypeEnum.DEBIT.toString();
 	
 	
 	
@@ -54,17 +59,21 @@ public class PaymentBean implements Serializable {
 		currentEvtPayload.setDatetime(new Date());
 		
 		switch (currentEvtPayload.getType()) {
+		
 		case DEBIT:
-
 			debitEventProducer.fire(currentEvtPayload);
-			
 			break;
+			
 		case CREDIT:
 			creditEventProducer.fire(currentEvtPayload);
-
+			break;
+		
+		case CASH:
+			cashEventProducer.fire(currentEvtPayload);
 			break;
 
-		default: log.severe("invalid payment option");
+		default: 
+			log.severe("invalid payment option");
 			break;
 		}
 		
@@ -76,8 +85,7 @@ public class PaymentBean implements Serializable {
 	
 	
 	//Reset Action
-	public void reset()
-	{
+	public void reset() {
 		amount= null;
 		paymentOption="";
 	 
@@ -102,6 +110,16 @@ public class PaymentBean implements Serializable {
 
 	public void setDebitEventLauncher(Event<PaymentEvent> debitEventLauncher) {
 		this.debitEventProducer = debitEventLauncher;
+	}
+
+
+	public Event<PaymentEvent> getCashEventProducer() {
+		return cashEventProducer;
+	}
+
+
+	public void setCashEventProducer(Event<PaymentEvent> cashEventProducer) {
+		this.cashEventProducer = cashEventProducer;
 	}
 
 

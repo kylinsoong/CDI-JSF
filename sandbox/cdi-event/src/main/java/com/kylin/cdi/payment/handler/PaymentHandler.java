@@ -13,11 +13,12 @@ import javax.inject.Named;
 
 
 import com.kylin.cdi.payment.events.PaymentEvent;
+import com.kylin.cdi.payment.qualifiers.Cash;
 import com.kylin.cdi.payment.qualifiers.Credit;
 import com.kylin.cdi.payment.qualifiers.Debit;
 
 @SessionScoped
-public class PaymentHandler implements Serializable,ICreditEventObserver, IDebitEventObserver {
+public class PaymentHandler implements Serializable,ICreditEventObserver, IDebitEventObserver, ICashEventObserver {
 
 	/**
 	 * 
@@ -35,21 +36,23 @@ public class PaymentHandler implements Serializable,ICreditEventObserver, IDebit
 		return payments;
 	}
 
-
-
 	public void onCreditPaymentEvent(@Observes @Credit PaymentEvent event){
 
-		logger.info("Processing the credit operation "+event);
+		logger.info("Processing the credit operation " + event);
 		payments.add(event);
 	}
 
-	
-	
-	@Override
 	public void onDebitPaymentEvent(@Observes @Debit PaymentEvent event) {
-		logger.info("Processing the debit operation "+event);
+		
+		logger.info("Processing the debit operation " + event);
 		payments.add(event);
 		
+	}
+
+	public void onCashPaymentEvent(@Observes @Cash PaymentEvent event) {
+		
+		logger.info("Processing the cash operation " + event);
+		payments.add(event);
 	}
 
 }
