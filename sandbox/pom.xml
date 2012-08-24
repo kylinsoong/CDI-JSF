@@ -21,6 +21,7 @@
         <module>cdi-injection</module>
         <module>cdi-event</module>
 	<module>jsf-helloworld</module>
+	<module>jsf-mail</module>
     </modules>
 
 </project>
