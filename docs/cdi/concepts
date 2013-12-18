@@ -1,0 +1,68 @@
+CDI 概念
+
+概述
+如果说EJB，JPA是之前JEE（JEE5及JEE5之前）中里程碑式的规范，那么在JEE6，JEE7中CDI可以与之媲美，CDI（Contexts and Dependency Injection），即上下文依赖注入，它是众多JEE规范中的一个，从JEE6开始CDI正式成为JEE规范，但CDI相关的概念不是新的，依赖注入的概念已经存在了许多年，相关的流行框架包括Spring，Google Guice等。目前CDI规范的实现主要有 JBoss Weld，Apache OpenWebBeans 和 Caucho CanDI，我们随后系列都是基于JBoss Weld进行。
+
+由Java Community Process介绍的Java Specification Request 299（JSR 299）的最终规范在2009年12月形成，JSR 299正式定义CDI为JEE规范。在同一个月JSR 299在JSR316中被定义为JEE6平台的一部分。这意味着，每个被认证为JEE6兼容的应用程序服务器必须默认支持上下文和依赖注入。 为了完整起见，我们应该指出，CDI相关的依赖注入是在Java SE 规范JSR 330的基础上进行的。如下为CDI相关的JSR链接：
+  JSR-299 - CDI: http://jcp.org/en/jsr/summary?id=299
+  JSR-316 - JEE 6: http://jcp.org/en/jsr/summary?id=316
+  JSR-330 - DI: http://jcp.org/en/jsr/summary?id=330
+
+
+上下文
+要完全了解什么是上下文，我们首先需要明白web应用是怎样运行的。现代计算机应用是可对话性质的，用户发送请求开始启动应用，传入一些预定的数据单元，直到最后一个预先定义的工作完成，请求会接收到反馈输出。这一过程中在计算机和终端用户之间存在着一些来回往复，计算机应用程序与用户必须进行多次交互，积累和处理数据直到它可以构造出所期望的输出。应用程序必须维护当前用户的数据状态，直到应用程序终止，这种类型的应用被认为是“有状态的”。Web应用程序使基于HTTP写的，HTTP其本身是无状态的，它是一种请求/响应协议，其中事务的状态只有在一个请求的处理过程中是活跃的。JEE服务器通过提供数据结构保存有状态的数据来确保应用的“有状态性”。当web应用程序使用Servlet规范，应用程序生命周期是可实现的，在生命周期的不同部分，有一些明确定义的数据的范围，我们称之为上下文，具体包括：
+Application
+应用程序上下文，即数据在应用程序上下文中可用。换句话，数据在应用程序部署到应用程序卸载或删除这段时间可用。这是最高级别的上下文。
+Session
+会话上下文，即数据存储在会话中，数据只有在会话被某一用户创建到会话被移除这段时间内被这个用户可用。
+Request
+请求上下文，数据只有在同一个用户的同一个请求中可用，当请求返回，数据不再被服务器维护。
+Conversation
+CDI新增加的上下文，它的作用范围是同一个会话上下文的几个请求的总和。如下图所示为Conversation示意图：
+cdi_conversation.png（Conversation作用范围）
+
+
+
+依赖注入
+依赖注入，即是由CDI定义的依赖注入，is the process by which objects can be inserted into ther application objects in a typesafe manner. The decision of which particular implementation of an object will be injected can be delayed until the time of application deployment. In other frameworks injection is based upon string matching. CDI improves upon this through typed injection where the types are checked at compile time. This exposes injection errors earlier in the development lifecycle and makes debugging easier.
+
+依赖注入的一个最大的好处是应用组件之间的松耦合。The client and server components are loosely coupled because several different versions of the server can be injected into the client. The client works with an interface and is oblivious to which server it is talking to. Taking advantage of the deploy time injection, we can use specific objects for different types of environments such as production and test environments. For example, we can inject a production or test datasource depending upon our deployment environment.
+
+
+
+其他CDI的特性
+除了上下文和依赖注入外，CDI还提供了一些其他特性：
+EL表达式的扩展：CDI中默认支持EL表达式并对其进行了扩展，比如在JSF或JSP中，默认是不支持EL表达式传参的，如果结合CDI，那么就可以在EL表达式中传参数给后台Bean。
+拦截器：CDI提供了一个十分方便的方法来实现一个或多个拦截器，用来处理 cross-cutting concerns such as logging
+装饰器：装饰器可以让你动态的扩展或者重写现有的业务接口。这个功能十分方便，在CDI中，你在调用一个接口的实现类的时候，无须关心这个实现类的名称，所以在你更换新的实现的时候无需去修改你的代码，只需要在新的接口上面通过装饰器声明你要替换的之前的接口实现，然后在 bean.xml 中声明一下即可。
+事件：CDI 提供了一种松耦合性的事件发送和接受机制。比如，在用户登陆后，我们需要在Session中存放一些用户信息。有了这个机制，我们不需要在登陆的那个方法中 通过new一个Session范围的对象或者把一些数据放入Session中，这样修改这些方法的时候，我们就得去修改这个登陆方法的。或者说 我们突然需要在用户登陆后，额外做一些事情，我们又得去修改登陆这块的代码。  在CDI中，我们可以在登陆成功后，发送出一个登陆成功的事件，然后我们可以在任何类中来接受这个事件，来完成对应的工作。
+类型安全：CDI不在通过字符串名称来注入对象，而通过java类型来确定被注入的对象。当只是通过java类型还不能确定到底哪一个对象被注入的时候，你可以通过扩展 @Qualifier 注解来限定你需要注入的对象。
+注解：CDI中所有的注入都是通过注解来完成的，XML相关的配置非常少
+普通的Java Bean ：在CDI中基本上所有的 Java Bean 都可以被注入。当然包括：EJB、JNDI资源、持久化单元、持久化上下文、接口等等。
+
+
+Weld
+Weld是相关的CDI实现。Weld作为CDI的实现框架被JEE容器，WEB容器，甚至Java SE使用。JBoss 7，WildFly，GlassFish 3 是JEE容器，他们使用Weld提供CDI支持。新版本的Tomcat 及 Jetty 6.1 是WEB容器，他们也通过Weld提供CDI支持。Weld甚至可以用在Java SE环境。
+
+Weld fully supports Maven. Maven libraries are available for dependency management of projects using CDI features. Maven archetypes are available to kick start an application enabled for CDI.
+
+Weld was inspired by Seam 2. Apache DeltaSpike, part of JBoss Web Framework Kit, builds upon the base CDI functionality using the SPI, and includes many extensions to the CDI specification first developed in Seam 2.
+
+更多关于Weld内容参照http://docs.jboss.org/weld/reference/latest/en-US/html/index.html
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
