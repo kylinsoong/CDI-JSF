@@ -1,0 +1,7 @@
+概述
+本文通过一个简单的 CDI Web 应用演示dependency injection, scope, qualifiers 以及EL整合。应用部署完成后我们可以通过 http://localhost:8080/moodchecker 来访问Web 应用欢迎页面，Mood在good和bad之间不停变化。通过本文，我们可以明白how qualifiers influence the selection of an injector。
+
+编译部署测试应用
+本应用源代码位于 https://github.com/kylinsoong/webframework/tree/master/cdi/moodchecker。
+
+
