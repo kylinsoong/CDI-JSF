@@ -1,0 +1,17 @@
+如果你在Java领域中工作或学习有一段时间，你一定知道或听说过在不同的上下文中使用"Bean"。你可能知道一个Java Bean，一个普通的Java类，有一个空的构造方法，私有的数据成员和公共访问方法，且通过公共访问方法访问私有的数据成员。你也可能知道Enterprise Java Beans (EJB)，这是我们在JEE中最常讨论的"Bean"。
+cdi_managedbeans.png
+如上图所示，JEE6中引入了一个统一的Bean模型，即位于图片中心的 Managed Bean，Managed Bean的基本特性如下：
+使用拦截器的功能
+有生命周期调运的功能，如@PostConstruct
+支持资源注入，如@EJB
+如上图中其他的Bean可以看作是特殊的Managed Bean，它们都有以上这些特性，并加入了相关的扩展特性，例如EJB是一种Managed Bean，它加入了事务和安全的扩展。
+
+CDI Beans
+CDI（上下文依赖注入）规范扩展了Managed Bean，添加了一些自己的特性，根据CDI规范的描述一个CDI Bean属于Java EE的一个组件，它的生命周期被容器管理。换句话说，CDI Bean被容器自动创建，销毁等生命周期是有明显的界限的。CDI Bean有如下几个基本要求：
+不是static类，也不能是内部类
+是一个具体的类，或被@Decorator标注过
+至少有一个构造方法满，且构造方法没有参数（空构造方法），或构造方法有参数单参数使用@Inject标注
+
+
+
+
